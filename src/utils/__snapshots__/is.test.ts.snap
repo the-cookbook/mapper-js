@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`utils/is should match snapshot 1`] = `
+Object {
+  "array": [Function],
+  "nullOrUndefined": [Function],
+  "object": [Function],
+}
+`;

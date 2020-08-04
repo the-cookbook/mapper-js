@@ -1,0 +1,176 @@
+# list with all available versions of node.js images
+# https://github.com/CircleCI-Public/circleci-dockerfiles/tree/master/node/images
+version: 2.1
+
+orbs:
+  node: circleci/node@3.0.1
+
+defaults: &build-image
+  docker:
+    - image: cypress/base:12
+      environment:
+        ## this enables colors in the output
+        TERM: xterm
+commands:
+  install_package_dependencies:
+    description: "Install library dependencies"
+    steps:
+      - checkout
+      - run:
+          name: Installing dependencies
+          command: yarn install --frozen-lockfile
+
+  unit_test:
+    description: "Run unit tests"
+    parameters:
+      node_version:
+        type: integer
+        default: 10
+      coverage:
+        type: boolean
+        default: false
+    steps:
+      - run:
+          name: Running unit tests on Node.js v<< parameters.node_version >> <<# parameters.coverage >>with coverage<</ parameters.coverage >>
+          command: yarn test<<# parameters.coverage >>:coverage<</ parameters.coverage >>
+
+jobs:
+  install:
+    <<: *build-image
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - c00k-b00k-{{ .Branch }}-{{ checksum "yarn.lock" }}
+            # fallback to using the latest cache if no exact match is found
+            - c00k-b00k-
+      - run:
+          name: Installing dependencies
+          command: yarn install --frozen-lockfile
+      - save_cache:
+          key: c00k-b00k-{{ .Branch }}-{{ checksum "yarn.lock" }}
+          paths:
+            - node_modules
+            - ~/.cache
+      - store_artifacts:
+          path: yarn-error.log
+      - persist_to_workspace:
+          root: .
+          paths:
+            - node_modules
+
+  lint:
+    <<: *build-image
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Linting library
+          command: yarn lint
+
+  audit:
+    <<: *build-image
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Auditing all dependencies
+          command: yarn audit
+
+  test_node_10:
+    docker:
+      - image: cypress/base:10.18.0
+      - image: node:10
+    steps:
+      - checkout
+      - install_package_dependencies
+      - unit_test:
+          node_version: 10
+
+  test_node_12:
+    docker:
+      - image: cypress/base:12
+      - image: node:12
+    steps:
+      - checkout
+      - install_package_dependencies
+      - unit_test:
+          node_version: 12
+          coverage: true
+
+  test_node_14:
+    docker:
+      - image: cypress/base:14.0.0
+      - image: node:14
+    steps:
+      - checkout
+      - install_package_dependencies
+      - unit_test:
+          node_version: 14
+
+  build:
+    <<: *build-image
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Building the library
+          command: yarn build
+      - persist_to_workspace:
+          root: .
+          paths:
+            - lib
+      - store_artifacts:
+          path: lib
+
+  release:
+    <<: *build-image
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - add_ssh_keys:
+          fingerprints:
+            - $GITHUB_FINGERPRINT
+      - run:
+          name: Set git upstream
+          command: git branch --set-upstream-to origin/${CIRCLE_BRANCH}
+      - run:
+          name: Running semantic-release workflow
+          command: npx semantic-release
+      - store_artifacts:
+          path: release
+
+workflows:
+  version: 2
+  "Test, Build & Maybe Deploy":
+    jobs:
+      - install
+      - lint:
+          requires:
+            - install
+#      - audit:
+#          requires:
+#            - install
+      - test_node_10
+      - test_node_12
+      - test_node_14
+      - build:
+          requires:
+            - lint
+            - test_node_10
+            - test_node_12
+            - test_node_14
+      - release:
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - master
+                - next
+                - pre/rc
+                - beta

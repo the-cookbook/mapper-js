@@ -1,0 +1,7 @@
+{
+  "./src/**/*.{ts,tsx}": [
+    "eslint",
+    "jest --passWithNoTests",
+    "prettier"
+  ]
+}
