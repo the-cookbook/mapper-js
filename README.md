@@ -390,5 +390,5 @@ mapping(source, { omitStrategy: customOmitStrategy });
 [awesome-url]: https://github.com/the-cookbook/mapper-js
 [install-size-image]: https://packagephobia.now.sh/badge?p=@cookbook/mapper-js
 [install-size-url]: https://packagephobia.now.sh/result?p=@cookbook/mapper-js
-[gzip-size-image]: http://img.badgesize.io/https://unpkg.com/@cookbook/mapper-js/lib/dot.min.js?compression=gzip
+[gzip-size-image]: http://img.badgesize.io/https://unpkg.com/@cookbook/mapper-js/lib/mapper.min.js?compression=gzip
 [gzip-size-url]: https://unpkg.com/@cookbook/mapper-js/lib/mapper.min.js
