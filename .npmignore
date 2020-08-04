@@ -18,9 +18,8 @@ src/
 .prettierrc.js
 babel.config.js
 commitlint.config.js
-dot-notation.png
-cypress.json
 jest.config.js
+mapper-js.png
 release.config.js
 rollup.config.js
 tsconfig.*
