@@ -17,7 +17,7 @@
 
 Play around with _mapper-js_ and experience **the magic**!
 
-[![Edit @cookbook/mapper-js](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/cookbookdot-notation-kjwd2?fontsize=14&hidenavigation=1&theme=dark)
+[![Edit @cookbook/mapper-js](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/cookbookmapper-js-jo7gf?fontsize=14&hidenavigation=1&theme=dark)
 
 ## Installation
 
