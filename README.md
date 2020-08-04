@@ -72,7 +72,7 @@ At this step, we need to create our `mapping` against our data `source`.
 
 We will be using `dot notation` to create our `final structure`.
 
-> For more info about `dot notation` API, check out the [documentation](https://github.com/arg-def/mapper-js)
+> For more info about `dot notation` API, check out the [documentation](https://github.com/the-cookbook/dot-notation)
 
 With `mapper`, it is possible to `get` _one_ or _several_ values from our `source`
 and even `transform` it in the way we need.
@@ -89,11 +89,11 @@ the selected values as array in the `parameter`.
 Now let's create our `mapping`!
 
 ```js
-import mapper from '@arg-def/mapper-js';
+import mapper from '@cookbook/mapper-js';
 
 ...
 
-const mapping = mapper.mapping((map) => ({
+const mapping = mapper((map) => ({
   'person.name': map('person.name')
                 .transform(({ firstName, lastName }) => `${firstName} ${lastName}`)
                 .value,
@@ -110,10 +110,10 @@ const mapping = mapper.mapping((map) => ({
 ### 3) Create your mapped object
 
 ```js
-import mapper from '@arg-def/mapper-js';
+import mapper from '@cookbook/mapper-js';
 ...
 
-const result = mapper(source, mapping);
+const result = mapping(source);
 /* outputs 
 {
   person: {
@@ -147,18 +147,42 @@ const result = mapper(source, mapping);
 ## mapper
 
 **Type:** `function()`
-**Parameter:** `source: object, mapping: IMapping, options?: IMapperOptions`
+**Parameter:** `mapping: Mapping`
+**Return:** `<T>(source: object | object[], options?: Options) => T extends [] ? T[] : T`,
+**Signature:** `(mapping: Mapping) => <T>(source: object | object[], options?: Options) => T extends [] ? T[] : T`
 
-**Description:** 
 
-  `mapper()` mappes your _source data_ against your _mapping_.
+**Description:**
+
+  `mapper()` is the main method and responsible for mapping the _values_ from your _data source_ against the _mapping instructions_.
+  It accepts `dot notation` path(s) as `key(s)`.
+
+Example:
+
+```ts
+// raw definition
+const mapping = mapper((map) => ({
+    ...
+}));
+
+// with map() query
+const mapping = mapper((map) => ({
+  'employee.name': map('person.name.firstName').value,
+  'employee.age': map('person.name.age').value,
+  'employee.address': map('person.address').value,
+}));
+```
+
+  As a result from the above implementation, `mapper()` return a new `function` to map and compile your _source data_ against your _mapping_.
 
   It accepts an extra (_optional_) argument defining the [_global mapping options_](#mapper-options).
 
 Example:
 
 ```ts
-mapper(source, mapping, options);
+...
+
+mapping(source, options);
 
 /* outputs 
 {
@@ -181,41 +205,13 @@ mapper(source, mapping, options);
 ```
 ___
 
-## mapper.mapping
-
-**Type**: `function()`
-**Parameter**: `map`
-**Signature:** `(callback: IMapping): IMapping => callback;`
-
-**Description:** 
-
-  `mapper.mapping()` is the method responsible for mapping the _values_ from your _source data_ against your _object shape_.
-  It accepts `dot notation` path as `key`.
-
-Example:
-```ts
-// raw definition
-const mapping = mapper.mapping((map) => ({
-    ...
-}));
-
-// with map() query
-const mapping = mapper.mapping((map) => ({
-  'employee.name': map('person.name.firstName').value,
-  'employee.age': map('person.name.age').value,
-  'employee.address': map('person.address').value,
-}));
-
-
-```
-___
-
 
 ## map
 
 **Type:** `function`
-**Parameter:** `paths: string|string[], option?: IMapperOptions` 
-**Signature:** `<T>(key: string | string[], options?: IMapperOptions) => IMapMethods<T>;`
+**Parameter:** `keys: string | string[], options?: Options` 
+**Return:** `MapMethods<T>`,
+**Signature:** `<T = unknown>(keys: string | string[], options?: Options) => MapMethods<T>`
 
 **Description:** 
 
@@ -235,7 +231,8 @@ map(['person.name.firstName', 'person.name.lastName'], options);
 
 **Type:** `function`
 **Parameter:** `...unknown[]`
-**Signature:** `(callback: (...args: unknown[]) => T) => IMapMethods<T>`
+**Return:** `unknown | unknown[]`,
+**Signature:** `(...args: unknown[]) => unknown | unknown[]`
 
 **Description:** 
 
@@ -251,14 +248,14 @@ map('person.name.firstName')
 
 // multiple values
 map(['person.name.firstName', 'person.name.lastName'])
-   .transform((firstName, lastName) => `${firstName} ${lastName]`);
+   .transform((firstName, lastName) => `${firstName} ${lastName}`);
 ```
 
 
 #### `value`
 
 **Type:** `readonly`
-**Returns:** `T`
+**Return:** `T`
 **Description:** 
 
   `.value` returns the value of your `dot notation` query. If transformed, returns the transformed value.
@@ -272,7 +269,7 @@ map('person.name.firstName')
 
 // multiple values
 map(['person.name.firstName', 'person.name.lastName'])
-   .transform((firstName, lastName) => `${firstName} ${lastName]`)
+   .transform((firstName, lastName) => `${firstName} ${lastName}`)
    .value;
 ```
 
@@ -283,14 +280,14 @@ map(['person.name.firstName', 'person.name.lastName'])
 
 ```js
 {
-  suppressNullUndefined: false,
-  suppressionStrategy: () => false,
+  omitNullUndefined: false,
+  omitStrategy: () => false,
 }
 ```
 
 ### Details
 
-**`suppressNullUndefined`**
+**`omitNullUndefined`**
 
 **Type:** `boolean`
 **default value:** `false`
@@ -300,6 +297,7 @@ map(['person.name.firstName', 'person.name.lastName'])
   Removes `null` or `undefined` entries from the _mapped_ object.
 
 Example:
+
 ```ts
 /* source object
 {
@@ -310,7 +308,7 @@ Example:
   },
 }
 */
-const mapping = mapper.mapping((map) => ({
+const mapping = mapper((map) => ({
   'name': map('person.name').value,
   'age': map('person.age').value,
    // source doesn't have property 'address',
@@ -318,7 +316,7 @@ const mapping = mapper.mapping((map) => ({
   'address': map('person.address').value,
 }));
 
-mapper(source, mapping, { suppressNullUndefined: true });
+mapping(source, { omitNullUndefined: true });
 /* outputs 
 {
   name: 'John',
@@ -328,16 +326,16 @@ mapper(source, mapping, { suppressNullUndefined: true });
 
 ```
 
-
-**`suppressionStrategy`**
+**`omitStrategy`**
 
 **Type:** `function`
-**Parameter:** `value: unknown`
-**Signature:** `(value: unknown) => boolean`
+**Parameter:** `value: unknown | unknown[]`
+**Return:** `boolean`
+**Signature:** `(value: unknown | unknown[]) => boolean`
 
 **Description:** 
 
-  Defines a _custom strategy_ to suppress entries from the _mapped object_.
+  Defines a _custom strategy_ to omit (_suppress_) entries from the _mapped object_.
 
 Example:
 ```tsx
@@ -358,15 +356,15 @@ Example:
 }
 */
 
-const customSuppressionStrategy = (address: ISource): boolean => address && address.city === 'Cupertino';
+const customOmitStrategy = (address: Record<string, string>): boolean => address && address.city === 'Cupertino';
 
-const mapping = mapper.mapping((map) => ({
+const mapping = mapper((map) => ({
   'name': map('person.name').value,
   'age': map('person.age').value,
   'address': map('person.address').value,
 }));
 
-mapper(source, mapping, { suppressionStrategy: customSuppressionStrategy );
+mapping(source, { omitStrategy: customOmitStrategy });
 /* outputs 
 {
   name: 'John',
