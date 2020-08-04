@@ -27,7 +27,7 @@ module.exports = [
   {
     input: './lib/index.js',
     output: {
-      file: `lib/${pkgName}.clean.min.js`,
+      file: `lib/${pkgName}.pure.min.js`,
       format: 'umd',
       name: pkgName,
       sourcemap: true,
