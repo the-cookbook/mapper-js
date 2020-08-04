@@ -8,16 +8,8 @@ interface Category {
 
 const menu: Category[] = [
   {
-    label: 'Pick',
-    value: 'pick'
-  },
-  {
-    label: 'Parse',
-    value: 'parse'
-  },
-  {
-    label: 'Parse key',
-    value: 'parse-key'
+    label: 'Default',
+    value: 'mapper'
   },
 ];
 

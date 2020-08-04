@@ -2,26 +2,18 @@ import React from 'react';
 
 import Menu from '../shared/menu';
 
-import Pick from './demos/pick';
-import Parse from './demos/parse';
-import ParseKey from './demos/parse-key';
+import Mapper from './demos/mapper';
 
 const selectView = (state: string, action: string ): React.ReactNode => {
   switch (action) {
-    case 'parse':
-      return Parse;
-
-    case 'parse-key':
-      return ParseKey;
-
-    case 'pick':
+    case 'mapper':
     default:
-      return Pick;
+      return Mapper;
   }
 }
 
 const Playground: React.FunctionComponent<Record<string, unknown>> = () => {
-  const [View, dispatch] = React.useReducer(selectView, Pick);
+  const [View, dispatch] = React.useReducer(selectView, Mapper);
 
   const handleOnClick = (value: string): void => {
     dispatch(value);
@@ -37,6 +29,7 @@ const Playground: React.FunctionComponent<Record<string, unknown>> = () => {
           color: '#fff',
           height: '100%',
           padding: 22,
+          overflow: 'auto',
         }}
         className="bg-pan-left"
       >

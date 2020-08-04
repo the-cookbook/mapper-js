@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactJson from 'react-json-view';
-import is from "@cookbook/dot-notation/utils/is";
+import is from '@cookbook/mapper-js/utils/is';
 
 interface Formatter {
   title?: string;
