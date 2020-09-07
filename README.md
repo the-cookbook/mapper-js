@@ -17,7 +17,7 @@
 
 Play around with _mapper-js_ and experience **the magic**!
 
-[![Edit @cookbook/mapper-js](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/cookbookdot-notation-kjwd2?fontsize=14&hidenavigation=1&theme=dark)
+[![Edit @cookbook/mapper-js](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/cookbookmapper-js-jo7gf?fontsize=14&hidenavigation=1&theme=dark)
 
 ## Installation
 
@@ -390,5 +390,5 @@ mapping(source, { omitStrategy: customOmitStrategy });
 [awesome-url]: https://github.com/the-cookbook/mapper-js
 [install-size-image]: https://packagephobia.now.sh/badge?p=@cookbook/mapper-js
 [install-size-url]: https://packagephobia.now.sh/result?p=@cookbook/mapper-js
-[gzip-size-image]: http://img.badgesize.io/https://unpkg.com/@cookbook/mapper-js/lib/dot.min.js?compression=gzip
+[gzip-size-image]: http://img.badgesize.io/https://unpkg.com/@cookbook/mapper-js/lib/mapper.min.js?compression=gzip
 [gzip-size-url]: https://unpkg.com/@cookbook/mapper-js/lib/mapper.min.js

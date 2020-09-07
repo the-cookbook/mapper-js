@@ -27,7 +27,25 @@ const mapper: Mapper = (mapping: Mapping) => {
 
       const mapped = map.omitEntries(mapping(map(src, options)));
 
-      return (is.array(mapped) ? mapped.map(parse) : parse<T>(mapped)) as T extends [] ? T[] : T;
+      if (is.array(mapped)) {
+        const values: T[] = [];
+
+        if (!mapped.length) {
+          return values;
+        }
+
+        for (let i = 0; i < mapped.length; i += 1) {
+          const value = mapped[i];
+
+          if (value && Object.keys(value).length) {
+            values.push(parse<T>(value) as T);
+          }
+        }
+
+        return values;
+      }
+
+      return (Object.keys(mapped).length ? parse<T>(mapped) : {}) as T;
     });
 
     return (is.array(source) ? result : result[0]) as T extends [] ? T[] : T;

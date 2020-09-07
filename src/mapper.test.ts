@@ -354,6 +354,22 @@ describe('mapper()', () => {
 
   describe('options', () => {
     describe('omitNullUndefined', () => {
+      it('should omit "null" and "undefined" from a single entry', () => {
+        const objectMapping = mapper((map) => ({
+          'account.balance': map<string>('non-available-key').value,
+        }));
+
+        const arrayMapping = mapper((map) => [
+          {
+            'account.balance': map<string>('non-available-key').value,
+          },
+        ]);
+
+        expect(objectMapping(data[1], { omitNullUndefined: true })).toStrictEqual({});
+
+        expect(arrayMapping(data[1], { omitNullUndefined: true })).toStrictEqual([]);
+      });
+
       it('should omit "null" and "undefined" entries', () => {
         const mapping = mapper((map) => ({
           active: map<boolean>('isActive').value,
