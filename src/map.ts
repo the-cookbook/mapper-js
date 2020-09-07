@@ -49,13 +49,18 @@ map.omitEntries = (
   entries: Record<string, unknown | unknown[]> | Record<string, unknown | unknown[]>[],
 ): Record<string, unknown | unknown[]> | Record<string, unknown | unknown[]>[] => {
   const result = toArray(entries).map((entry) => {
-    return Object.keys(entry).reduce((acc, key) => {
-      if (entry[key] !== suppress) {
-        acc[key] = entry[key];
-      }
+    const values: Record<string, unknown | unknown[]> = {};
+    const keys = Object.keys(entry);
 
-      return acc;
-    }, {} as Record<string, unknown | unknown[]>);
+    for (let i = 0; i < keys.length; i += 1) {
+      const key = keys[i];
+
+      if (entry[key] !== suppress) {
+        values[key] = entry[key];
+      }
+    }
+
+    return values;
   });
 
   return is.array(entries) ? result : result[0];
