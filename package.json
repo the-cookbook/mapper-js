@@ -1,6 +1,6 @@
 {
   "name": "@cookbook/mapper-js",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Fast, reliable and intuitive object mapping.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
