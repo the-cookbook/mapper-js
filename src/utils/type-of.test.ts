@@ -13,7 +13,7 @@ describe('utils/typeOf()', () => {
   };
 
   Object.keys(expectations).forEach((type) => {
-    it(`should flag "${expectations[type]}" as "${type}"`, () => {
+    it(`should flag "${<string>expectations[type]}" as "${type}"`, () => {
       expect(typeOf(expectations[type])).toStrictEqual(type);
     });
   });

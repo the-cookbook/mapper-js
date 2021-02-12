@@ -16,7 +16,7 @@ type Map = <T = unknown>(keys: string | string[], options?: Options) => MapMetho
 
 const suppress = Symbol('map-suppress');
 
-const map = <T = unknown>(source: Record<string, unknown | unknown[]>, mapperOptions: Options = {}): Map => {
+const map = (source: Record<string, unknown | unknown[]>, mapperOptions: Options = {}): Map => {
   if (!is.object(source)) {
     throw new TypeError(`Instance of "source" must be an object, but instead got "${typeOf(source)}"`);
   }
@@ -30,6 +30,7 @@ const map = <T = unknown>(source: Record<string, unknown | unknown[]>, mapperOpt
       transform(callback: TransformCallback) {
         result = is.array(keys) ? callback(...(<unknown[]>result)) : callback(result);
 
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         return this;
       },
       get value(): T extends [] ? T[] : T {

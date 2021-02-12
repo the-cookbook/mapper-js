@@ -19,8 +19,8 @@ describe('map()', () => {
     it('should map single keys', () => {
       expect(map(data[0])('address[0]').value).toEqual(data[0].address[0]);
       expect(map(data[0])('email').value).toEqual(data[0].email);
-      expect(map(data[0])('name').transform((name: string) => name.replace(/[\s]/gm, '-')).value).toEqual(
-        data[0].name.replace(/[\s]/gm, '-'),
+      expect(map(data[0])('name').transform((name: string) => name.replace(/\s/gm, '-')).value).toEqual(
+        data[0].name.replace(/\s/gm, '-'),
       );
     });
 
@@ -62,3 +62,4 @@ describe('map()', () => {
     });
   });
 });
+/* eslint-enable @typescript-eslint/no-explicit-any, jest/no-mocks-import */

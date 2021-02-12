@@ -423,3 +423,4 @@ describe('mapper()', () => {
     });
   });
 });
+/* eslint-enable @typescript-eslint/no-explicit-any, jest/no-mocks-import */
