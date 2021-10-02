@@ -9,7 +9,7 @@
     "url": "git+https://github.com/the-cookbook/mapper-js.git"
   },
   "engines": {
-    "node": ">=8"
+    "node": ">=12"
   },
   "author": "Marcos Gonçalves <contact@themgoncalves.com>",
   "license": "MIT",
