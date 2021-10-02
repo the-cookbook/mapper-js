@@ -7,7 +7,7 @@ orbs:
 
 defaults: &build-image
   docker:
-    - image: cypress/base:12
+    - image: cypress/base:14
       environment:
         ## this enables colors in the output
         TERM: xterm
