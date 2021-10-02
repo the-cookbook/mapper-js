@@ -13,7 +13,7 @@ defaults: &build-image
         TERM: xterm
 commands:
   install_package_dependencies:
-    description: "Install library dependencies"
+    description: 'Install library dependencies'
     steps:
       - checkout
       - run:
@@ -21,7 +21,7 @@ commands:
           command: yarn install --frozen-lockfile
 
   unit_test:
-    description: "Run unit tests"
+    description: 'Run unit tests'
     parameters:
       node_version:
         type: integer
@@ -79,19 +79,8 @@ jobs:
           name: Auditing all dependencies
           command: yarn audit
 
-  test_node_10:
-    docker:
-      - image: cypress/base:10
-      - image: node:10
-    steps:
-      - checkout
-      - install_package_dependencies
-      - unit_test:
-          node_version: 10
-
   test_node_12:
     docker:
-      - image: cypress/base:12
       - image: node:12
     steps:
       - checkout
@@ -102,7 +91,6 @@ jobs:
 
   test_node_14:
     docker:
-      - image: cypress/base:14.0.0
       - image: node:14
     steps:
       - checkout
@@ -146,22 +134,20 @@ jobs:
 
 workflows:
   version: 2
-  "Test, Build & Maybe Deploy":
+  'Test, Build & Maybe Deploy':
     jobs:
       - install
       - lint:
           requires:
             - install
-#      - audit:
-#          requires:
-#            - install
-      - test_node_10
+      #      - audit:
+      #          requires:
+      #            - install
       - test_node_12
       - test_node_14
       - build:
           requires:
             - lint
-            - test_node_10
             - test_node_12
             - test_node_14
       - release:

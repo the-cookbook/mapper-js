@@ -38,7 +38,7 @@ const mapper: Mapper = (mapping: Mapping) => {
           const value = mapped[i];
 
           if (value && Object.keys(value).length) {
-            values.push(parse<T>(value) as T);
+            values.push(parse(value as Record<string, unknown>) as T);
           }
         }
 
