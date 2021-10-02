@@ -46,8 +46,6 @@ module.exports = {
     'plugin:react/recommended',
     'eslint-config-prettier',
     'prettier',
-    'prettier/react',
-    'prettier/@typescript-eslint',
   ],
   rules: {
     '@typescript-eslint/explicit-function-return-type': [
