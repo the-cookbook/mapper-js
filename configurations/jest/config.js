@@ -8,8 +8,6 @@ module.exports = {
   moduleDirectories: ['node_modules', 'src'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'md'],
   moduleNameMapper: {
-    '^.+\\.(jpg|jpeg|png|gif||otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
-      './configurations/jest/__mocks__/file.js',
     '^configurations(.*)$': '<rootDir>/configurations$1',
   },
   collectCoverageFrom: [

@@ -16,7 +16,7 @@ type Map = <T = unknown>(keys: string | string[], options?: Options) => MapMetho
 
 const suppress = Symbol('map-suppress');
 
-const map = <T = unknown>(source: Record<string, unknown | unknown[]>, mapperOptions: Options = {}): Map => {
+const map = (source: Record<string, unknown>, mapperOptions: Options = {}): Map => {
   if (!is.object(source)) {
     throw new TypeError(`Instance of "source" must be an object, but instead got "${typeOf(source)}"`);
   }
@@ -30,13 +30,14 @@ const map = <T = unknown>(source: Record<string, unknown | unknown[]>, mapperOpt
       transform(callback: TransformCallback) {
         result = is.array(keys) ? callback(...(<unknown[]>result)) : callback(result);
 
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         return this;
       },
       get value(): T extends [] ? T[] : T {
         const { omitNullUndefined, omitStrategy } = OPTIONS;
 
         if ((is.nullOrUndefined(result) && omitNullUndefined) || (omitStrategy && omitStrategy(result))) {
-          return (suppress as unknown) as T extends [] ? T[] : T;
+          return suppress as unknown as T extends [] ? T[] : T;
         }
 
         return result as T extends [] ? T[] : T;
@@ -45,11 +46,9 @@ const map = <T = unknown>(source: Record<string, unknown | unknown[]>, mapperOpt
   };
 };
 
-map.omitEntries = (
-  entries: Record<string, unknown | unknown[]> | Record<string, unknown | unknown[]>[],
-): Record<string, unknown | unknown[]> | Record<string, unknown | unknown[]>[] => {
+map.omitEntries = <T extends Record<string, unknown>>(entries: T | T[]): T => {
   const result = toArray(entries).map((entry) => {
-    const values: Record<string, unknown | unknown[]> = {};
+    const values: Record<string, unknown> = {};
     const keys = Object.keys(entry);
 
     for (let i = 0; i < keys.length; i += 1) {
@@ -63,7 +62,7 @@ map.omitEntries = (
     return values;
   });
 
-  return is.array(entries) ? result : result[0];
+  return (is.array(entries) ? result : result[0]) as T;
 };
 
 map.suppress = suppress;

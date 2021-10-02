@@ -4,3 +4,4 @@ import type { Map, MapMethods, TransformCallback } from './map';
 
 export type { Mapper, Mapping, Map, MapMethods, TransformCallback };
 export default mapper;
+/* eslint-enable filenames/match-exported */

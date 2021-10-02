@@ -1,4 +1,5 @@
 # @cookbook/mapper-js
+
 > Fast, reliable and intuitive object mapping.
 
 [![NPM Version][npm-image]][npm-url]
@@ -41,7 +42,7 @@ const source = {
   person: {
     name: {
       firstName: 'John',
-      lastName: 'Doe'
+      lastName: 'Doe',
     },
     age: 32,
     drinks: ['beer', 'whiskey'],
@@ -51,7 +52,7 @@ const source = {
         city: 'Cupertino',
         state: 'CA',
         postalCode: 95014,
-        country: 'United States'
+        country: 'United States',
       },
       {
         street: '1600 Amphitheatre',
@@ -60,11 +61,10 @@ const source = {
         postalCode: 94043,
         country: 'United States',
       },
-    ]
-  }
-}
+    ],
+  },
+};
 ```
-
 
 ### 2) Create your mapping using dot notation
 
@@ -81,14 +81,14 @@ For that, `map()` accepts `single dot notation` path or
 `an array of dot notation paths`. E.g.: `map('person.name.firstName')`, `map([person.name.firstName, person.name.lastName]);`'
 
 Those values can be _transformed_ by using the `.transform()` method, which expects a `function` as argument and provides
-the selected values as array in the `parameter`. 
+the selected values as array in the `parameter`.
 
 > For more information about the usage, check the [API Documentation](#api-documentation).
-
 
 Now let's create our `mapping`!
 
 ```js
+// mapping.ts
 import mapper from '@cookbook/mapper-js';
 
 ...
@@ -106,15 +106,14 @@ const mapping = mapper((map) => ({
 }));
 ```
 
-
 ### 3) Create your mapped object
 
 ```js
-import mapper from '@cookbook/mapper-js';
+import mapping from './mapping';
 ...
 
 const result = mapping(source);
-/* outputs 
+/* outputs
 {
   person: {
     name: 'John Doe',
@@ -151,11 +150,10 @@ const result = mapping(source);
 **Return:** `<T>(source: object | object[], options?: Options) => T extends [] ? T[] : T`,
 **Signature:** `(mapping: Mapping) => <T>(source: object | object[], options?: Options) => T extends [] ? T[] : T`
 
-
 **Description:**
 
-  `mapper()` is the main method and responsible for mapping the _values_ from your _data source_ against the _mapping instructions_.
-  It accepts `dot notation` path(s) as `key(s)`.
+`mapper()` is the main method and responsible for mapping the _values_ from your _data source_ against the _mapping instructions_.
+It accepts `dot notation` path(s) as `key(s)`.
 
 Example:
 
@@ -173,9 +171,9 @@ const mapping = mapper((map) => ({
 }));
 ```
 
-  As a result from the above implementation, `mapper()` return a new `function` to map and compile your _source data_ against your _mapping_.
+As a result from the above implementation, `mapper()` return a new `function` to map and compile your _source data_ against your _mapping_.
 
-  It accepts an extra (_optional_) argument defining the [_global mapping options_](#mapper-options).
+It accepts an extra (_optional_) argument defining the [_global mapping options_](#mapper-options).
 
 Example:
 
@@ -184,7 +182,7 @@ Example:
 
 mapping(source, options);
 
-/* outputs 
+/* outputs
 {
   employee: {
     name: 'John',
@@ -203,29 +201,29 @@ mapping(source, options);
 }
 */
 ```
-___
 
+---
 
 ## map
 
 **Type:** `function`
-**Parameter:** `keys: string | string[], options?: Options` 
+**Parameter:** `keys: string | string[], options?: Options`
 **Return:** `MapMethods<T>`,
 **Signature:** `<T = unknown>(keys: string | string[], options?: Options) => MapMethods<T>`
 
-**Description:** 
+**Description:**
 
-  `root` method retrieves values from your _source data_ using `dot notation` path, it accepts a string or array of string.
+`root` method retrieves values from your _source data_ using `dot notation` path, it accepts a string or array of string.
 
-  It accepts an extra (_optional_) argument to define the [_mapping options for current entry_](#mapper-options), _overriding_ the _global mapping options_.
+It accepts an extra (_optional_) argument to define the [_mapping options for current entry_](#mapper-options), _overriding_ the _global mapping options_.
 
 Example:
+
 ```ts
 map('person.name.firstName');
 map(['person.name.firstName', 'person.name.lastName']);
 map(['person.name.firstName', 'person.name.lastName'], options);
 ```
-
 
 #### `transform`
 
@@ -234,45 +232,40 @@ map(['person.name.firstName', 'person.name.lastName'], options);
 **Return:** `unknown | unknown[]`,
 **Signature:** `(...args: unknown[]) => unknown | unknown[]`
 
-**Description:** 
+**Description:**
 
-  `.transform` method provides you the ability to _transform_ the retrieved value(s) from `map()` according to your needs, and for that, it expects a return value.
+`.transform` method provides you the ability to _transform_ the retrieved value(s) from `map()` according to your needs, and for that, it expects a return value.
 
-  `.transform` provides you as _parameter_, the retrieved value(s) in the **same order** as defined in the `map()` method, otherwise
+`.transform` provides you as _parameter_, the retrieved value(s) in the **same order** as defined in the `map()` method, otherwise
 
 Example:
+
 ```ts
 // single value
-map('person.name.firstName')
-   .transform((firstName) => firstName.toLoweCase());
+map('person.name.firstName').transform((firstName) => firstName.toLoweCase());
 
 // multiple values
-map(['person.name.firstName', 'person.name.lastName'])
-   .transform((firstName, lastName) => `${firstName} ${lastName}`);
+map(['person.name.firstName', 'person.name.lastName']).transform((firstName, lastName) => `${firstName} ${lastName}`);
 ```
-
 
 #### `value`
 
 **Type:** `readonly`
 **Return:** `T`
-**Description:** 
+**Description:**
 
-  `.value` returns the value of your `dot notation` query. If transformed, returns the transformed value.
+`.value` returns the value of your `dot notation` query. If transformed, returns the transformed value.
 
 Example:
+
 ```ts
 // single value
-map('person.name.firstName')
-   .transform((firstName) => firstName.toLoweCase())
-   .value;
+map('person.name.firstName').transform((firstName) => firstName.toLoweCase()).value;
 
 // multiple values
-map(['person.name.firstName', 'person.name.lastName'])
-   .transform((firstName, lastName) => `${firstName} ${lastName}`)
-   .value;
+map(['person.name.firstName', 'person.name.lastName']).transform((firstName, lastName) => `${firstName} ${lastName}`)
+  .value;
 ```
-
 
 ## Mapper Options
 
@@ -292,9 +285,9 @@ map(['person.name.firstName', 'person.name.lastName'])
 **Type:** `boolean`
 **default value:** `false`
 
-**Description:** 
+**Description:**
 
-  Removes `null` or `undefined` entries from the _mapped_ object.
+Removes `null` or `undefined` entries from the _mapped_ object.
 
 Example:
 
@@ -309,11 +302,11 @@ Example:
 }
 */
 const mapping = mapper((map) => ({
-  'name': map('person.name').value,
-  'age': map('person.age').value,
-   // source doesn't have property 'address',
-   // therefore will return "undefined"
-  'address': map('person.address').value,
+  name: map('person.name').value,
+  age: map('person.age').value,
+  // source doesn't have property 'address',
+  // therefore will return "undefined"
+  address: map('person.address').value,
 }));
 
 mapping(source, { omitNullUndefined: true });
@@ -323,7 +316,6 @@ mapping(source, { omitNullUndefined: true });
   age: 32,
 }
 */
-
 ```
 
 **`omitStrategy`**
@@ -333,11 +325,12 @@ mapping(source, { omitNullUndefined: true });
 **Return:** `boolean`
 **Signature:** `(value: unknown | unknown[]) => boolean`
 
-**Description:** 
+**Description:**
 
-  Defines a _custom strategy_ to omit (_suppress_) entries from the _mapped object_.
+Defines a _custom strategy_ to omit (_suppress_) entries from the _mapped object_.
 
 Example:
+
 ```tsx
 /* source object
 {
@@ -359,9 +352,9 @@ Example:
 const customOmitStrategy = (address: Record<string, string>): boolean => address && address.city === 'Cupertino';
 
 const mapping = mapper((map) => ({
-  'name': map('person.name').value,
-  'age': map('person.age').value,
-  'address': map('person.address').value,
+  name: map('person.name').value,
+  age: map('person.age').value,
+  address: map('person.address').value,
 }));
 
 mapping(source, { omitStrategy: customOmitStrategy });
@@ -371,10 +364,10 @@ mapping(source, { omitStrategy: customOmitStrategy });
   age: 32,
 }
 */
-
 ```
 
 <!-- Markdown link & img dfn's -->
+
 [npm-image]: https://img.shields.io/npm/v/@cookbook/mapper-js.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/@cookbook/mapper-js
 [npm-downloads]: https://img.shields.io/npm/dm/@cookbook/mapper-js.svg?style=flat-square
