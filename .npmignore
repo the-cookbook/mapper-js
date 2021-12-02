@@ -1,9 +1,11 @@
 .git
 .idea
 .circleci
+.husky
 .github
 configurations/
 demo/
+release/
 scripts/
 src/
 .browserslistrc

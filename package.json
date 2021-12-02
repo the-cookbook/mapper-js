@@ -30,8 +30,7 @@
   ],
   "scripts": {
     "authors": "node ./scripts/authors.js",
-    "postinstall": "husky install",
-    "prepare": "npm run build && npm run authors",
+    "prepare": "husky install && npm run build && npm run authors",
     "prepublishOnly": "npm test && npm run lint",
     "preversion": "npm run lint",
     "postversion": "git push && git push --tags",
